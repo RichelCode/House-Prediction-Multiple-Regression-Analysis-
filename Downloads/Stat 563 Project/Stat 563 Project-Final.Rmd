@@ -1,0 +1,16 @@
+---
+title: "Stat 563 Project- Final"
+author: "Richel Charntel Jing Jing"
+date: : "2024-11-19"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+```
+
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
