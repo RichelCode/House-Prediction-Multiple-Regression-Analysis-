@@ -445,6 +445,10 @@ full_model <- lm(price ~ ., data = kc_house_data)
 vif(full_model)
 
 ```
+The full model for predicting house price is:
+\[
+\text{price} = \beta_0 + \beta_1 \cdot \text{bedrooms} + \beta_2 \cdot \text{bathrooms} + \beta_3 \cdot \text{sqft\_living} + \beta_4 \cdot \text{sqft\_lot} + \beta_5 \cdot \text{floors} + \beta_6 \cdot \text{waterfront} + \beta_7 \cdot \text{view} + \beta_8 \cdot \text{condition} + \beta_9 \cdot \text{grade} + \beta_{10} \cdot \text{yr\_built} + \beta_{11} \cdot \text{yr\_renovated} + \beta_{12} \cdot \text{zipcode} + \beta_{13} \cdot \text{lat} + \beta_{14} \cdot \text{long} + \beta_{15} \cdot \text{sqft\_living15} + \beta_{16} \cdot \text{sqft\_lot15} + \beta_{17} \cdot \text{year\_sold} + \beta_{18} \cdot \text{month\_sold} + \epsilon
+\]
 
 After addressing multicollinearity by removing decade_built, the VIF values for all predictors have significantly improved, with no values exceeding the critical threshold of 10. The variable yr_built, which previously exhibited severe multicollinearity, now has a VIF of 2.55, indicating low multicollinearity and making it suitable for inclusion in the model. Most predictors, such as bathrooms, sqft_living, sqft_living15, and zipcode, show moderate multicollinearity with VIF values between 2 and 4, which is manageable. Other predictors, including waterfront, lat, and long, have low VIF values close to 1, indicating high independence from other variables. The removal of decade_built successfully resolved the multicollinearity issue, and the model is now more stable and interpretable. Further analysis can proceed without concerns of redundancy among predictors.
 
@@ -673,7 +677,7 @@ The predictors zipcode, yr_renovated, sqft_lot15, and month_sold were removed fr
 
 ```{r 1.66}
 # Updating model to remove insignificant predictors
-model_refined <- lm(log_price ~ grade + lat + sqft_living + yr_built +
+model_refined <- lm(log_price ~ grade + lat + sqft_living + yr_built +bedrooms+
                       sqft_living15 + floors + condition + view +
                       year_sold + bathrooms + waterfront, data = refined_data)
 summary(model_refined)
@@ -698,16 +702,10 @@ compute_model_metrics <- function(model, data) {
 }
 
 # Compute metrics for all models
-metrics_forward <- compute_model_metrics(forward_model, refined_data)
-metrics_backward <- compute_model_metrics(backward_model, refined_data)
-metrics_both <- compute_model_metrics(both_model, refined_data)
 metrics_refined <- compute_model_metrics(model_refined, refined_data)
 
 # Combine the results
 results <- rbind(
-  cbind(Model = "Forward", metrics_forward),
-  cbind(Model = "Backward", metrics_backward),
-  cbind(Model = "Both", metrics_both),
   cbind(Model = "Refined", metrics_refined)
 )
 
